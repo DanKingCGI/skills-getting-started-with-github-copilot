@@ -20,11 +20,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // Create participants list
+        const participantsList = details.participants.length > 0 
+          ? `<ul class="activity-card__participants-list">${details.participants.map(email => `<li class="activity-card__participant">${email}</li>`).join('')}</ul>`
+          : '<p class="activity-card__no-participants">No participants yet</p>';
+
         activityCard.innerHTML = `
-          <h4>${name}</h4>
-          <p>${details.description}</p>
-          <p><strong>Schedule:</strong> ${details.schedule}</p>
-          <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <h4 class="activity-card__title">${name}</h4>
+          <p class="activity-card__text">${details.description}</p>
+          <p class="activity-card__text"><strong>Schedule:</strong> ${details.schedule}</p>
+          <p class="activity-card__text"><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <div class="activity-card__participants">
+            <p class="activity-card__participants-title"><strong>Current Participants:</strong></p>
+            ${participantsList}
+          </div>
         `;
 
         activitiesList.appendChild(activityCard);
@@ -60,23 +69,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (response.ok) {
         messageDiv.textContent = result.message;
-        messageDiv.className = "success";
+        messageDiv.className = "message message--success";
         signupForm.reset();
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
-        messageDiv.className = "error";
+        messageDiv.className = "message message--error";
       }
 
-      messageDiv.classList.remove("hidden");
+      messageDiv.classList.remove("message--hidden");
 
       // Hide message after 5 seconds
       setTimeout(() => {
-        messageDiv.classList.add("hidden");
+        messageDiv.classList.add("message--hidden");
       }, 5000);
     } catch (error) {
       messageDiv.textContent = "Failed to sign up. Please try again.";
-      messageDiv.className = "error";
-      messageDiv.classList.remove("hidden");
+      messageDiv.className = "message message--error";
+      messageDiv.classList.remove("message--hidden");
       console.error("Error signing up:", error);
     }
   });
